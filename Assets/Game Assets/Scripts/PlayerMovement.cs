@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         _controller = GetComponent<CharacterController>();
+        
     }
 
     // Update is called once per frame
