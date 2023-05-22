@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] private int _maximumHealth = 100;
     private int _currentHealth;
-    private Renderer _renderer;
+
     void Start()
     {
         _currentHealth = _maximumHealth;
-        _renderer = GetComponentInChildren<Renderer>();
     }
 
     public override string ToString()
@@ -24,43 +23,32 @@ public class Health : MonoBehaviour
         get { return _currentHealth <= 0; }
     }
 
-    public void Damage(int damageValue)
+    public void PlayerDamage(int damageValue)
     {
         _currentHealth -= damageValue;
 
         if (_currentHealth < 0)
         {
             _currentHealth = 0;
-            
+
         }
 
-        if (_currentHealth==0)
+        if (_currentHealth == 0)
         {
-           
-            Animation a = GetComponentInChildren<Animation>();
-            a.Stop();
-            Destroy(GetComponent<EnemyMovement>());
-            Destroy(GetComponentInChildren<EnemyAttack>());
-            
-            
-            EnemySpawnManager.OnEnemyDeath();
-            
-            
+            Animator a = GetComponentInChildren<Animator>();
+            Destroy(a);
+            Destroy(GetComponent<PlayerMovement>());
+            Destroy(GetComponent<PlayerAnimation>());
+            Destroy(GetComponent<RifleWeapon>());
             Destroy(GetComponent<CharacterController>());
+           
+            
             Ragdoll r = GetComponent<Ragdoll>();
             if (r != null)
             {
                 r.OnDeath();
-                
+                Destroy(this.gameObject, 1);
             }
-        }
-    }
-
-    void Update()
-    {
-        if (IsDead && !_renderer.isVisible)
-        {
-            Destroy(this.gameObject);
         }
     }
 
